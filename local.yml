@@ -1,8 +1,30 @@
 ---
 - hosts: 127.0.0.1
-  collections: [ 'debops.debops', 'debops.roles01', 'debops.roles02', 'debops.roles03' ]
+  collections: ['debops.debops', 'debops.roles01', 'debops.roles02', 'debops.roles03']
   roles:
-    - debops.debops.etckeeper
-    - debops.debops.netbase
-    - debops.roles03.fail2ban
-    - debops.debops.sshd
+    - role: debops.debops.apt_install
+      vars:
+        apt_install__packages:
+          - python-netaddr # for netbase
+          - libuser # for users
+    - role: debops.debops.netbase
+    - role: debops.debops.sudo
+    - role: debops.debops.system_groups
+    - role: debops.debops.users
+      vars:
+        users__accounts:
+          - name: 'devin'
+            groups: ['admins']
+    - role: debops.debops.sshd
+      vars:
+        sshd__ports: ['218']
+        sshd__permit_root_login: 'no'
+        sshd__password_authentication: 'no'
+        sshd__allow_groups: ['admins', 'sshusers']
+    - role: debops.debops.authorized_keys
+      vars:
+        authorized_keys__list:
+          - name: 'devin'
+            github: 'devvmh'
+    - role: debops.debops.etckeeper
+    - role: debops.roles03.fail2ban
