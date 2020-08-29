@@ -8,7 +8,8 @@ I assume you just spun up a VPS and want to *pull* your configuration from the w
 
 ### List of playbooks in this repo
 
-core (basic setup): https://github.com/devvmh/ansible-playbook-core/tree/core
+- core (basic setup): https://github.com/devvmh/ansible-playbook-core/tree/core
+- mail-server: https://github.com/devvmh/ansible-playbook-core/tree/mail-server
 
 ### Usage:
 
@@ -34,5 +35,9 @@ Now you can pull the playbooks from debops + this repository, which should confi
 Now set the password and you're done:
 
     passwd devin
+
+Now pull the other playbooks as desired:
+
+    ansible-pull --url https://github.com/devvmh/ansible-playbook-core.git --checkout mail-server
 
 Once you have run this and tested ssh access, you can omit the extra vars; hostname doesn't need to be changed again, and you can drop ssh access to only passwordless access to a non-privileged account.
