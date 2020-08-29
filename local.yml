@@ -28,3 +28,8 @@
             github: 'devvmh'
     - role: debops.debops.etckeeper
     - role: debops.roles03.fail2ban
+    - role: debops.debops.apt_install
+      vars:
+        apt_install__packages:
+          - mosh
+          - tmux
