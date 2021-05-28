@@ -3,11 +3,13 @@
   collections: ['debops.debops', 'debops.roles01', 'debops.roles02', 'debops.roles03']
   roles:
     - role: ansible-role-certbot
+      debug:
+        msg: "certbot_domains is {{ certbot_domains }}"
       vars:
-        certbot_auto_renew_user: {{ certbot_auto_renew_user | default('devin') }}
-        certbot_admin_email: {{ certbot_admin_email | default('devin@callysto.com') }}
+        certbot_auto_renew_user: "{{ override_certbot_auto_renew_user | default('devin') }}"
+        certbot_admin_email: "{{ override_certbot_admin_email | default('devin@callysto.com') }}"
         certbot_certs:
-          - domains: {{ certbot_domains | default([netbase__hostname]) }}
+          - domains: "{{ certbot_domains | default([lookup('file', '/etc/hostname')]) }}"
         certbot_repo: https://github.com/certbot/certbot.git
         certbot_version: master
         certbot_keep_updated: true
