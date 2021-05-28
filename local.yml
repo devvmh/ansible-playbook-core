@@ -1,0 +1,20 @@
+---
+- hosts: 127.0.0.1
+  vars:
+    certbot_repo: https://github.com/certbot/certbot.git
+    certbot_version: master
+    certbot_keep_updated: true
+    certbot_auto_renew_user: devin
+    certbot_auto_renew_minute: 19
+    certbot_auto_renew_hour: 03
+    certbot_create_if_missing: yes
+    certbot_admin_email: devin@callysto.com
+
+    # don't assume we have nginx; override default to empty
+    certbot_create_standalone_stop_services: []
+
+    certbot_certs:
+      - domains:
+        - linode2.devinhoward.ca
+  roles:
+    - ansible-role-certbot
