@@ -2,10 +2,20 @@
 - hosts: 127.0.0.1
   collections: ['debops.debops', 'debops.roles01', 'debops.roles02', 'debops.roles03']
   roles:
-    - role: debops.debops.apt_install
+    - role: ansible-role-certbot
       vars:
-        apt_install__packages:
-          - certbot # TODO replace
+        certbot_auto_renew_user: {{ certbot_auto_renew_user | default('devin') }}
+        certbot_admin_email: {{ certbot_admin_email | default('devin@callysto.com') }}
+        certbot_certs:
+          - domains: {{ certbot_domains | default([netbase__hostname]) }}
+        certbot_repo: https://github.com/certbot/certbot.git
+        certbot_version: master
+        certbot_keep_updated: true
+        certbot_auto_renew_minute: 19
+        certbot_auto_renew_hour: 03
+        certbot_create_if_missing: yes
+        # don't assume we have nginx; override default to empty
+        certbot_create_standalone_stop_services: []
     - role: debops.roles01.postfix
     - role: debops.roles02.postwhite
     - role: debops.roles03.postscreen
