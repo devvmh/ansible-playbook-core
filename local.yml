@@ -25,7 +25,7 @@
         postfix__maincf:
           - myhostname: "{{ mail_domains[0] }}"
           - myorigin: '/etc/mailname'
-          - mydestination: "{{ mail_domains }}" + ['localhost']
+          - mydestination: "{{ mail_domains }}"
           - mynetworks: "{{ mynetworks | default([])}}"
           - smtpd_tls_cert_file: "/etc/letsencrypt/live/{{ mail_domains[0] }}/cert.pem"
           - smtpd_tls_key_file: "/etc/letsencrypt/live/{{ mail_domains[0] }}/privkey.pem"
