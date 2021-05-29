@@ -1,6 +1,8 @@
 ---
 - hosts: 127.0.0.1
   collections: ['debops.debops', 'debops.roles01', 'debops.roles02', 'debops.roles03']
+  vars:
+    mail_domains: "{{ override_mail_domains | default([lookup('file', '/etc/hostname')]) }}"
   roles:
     - role: ansible-role-certbot
       debug:
@@ -9,7 +11,7 @@
         certbot_auto_renew_user: "{{ override_certbot_auto_renew_user | default('devin') }}"
         certbot_admin_email: "{{ override_certbot_admin_email | default('devin@callysto.com') }}"
         certbot_certs:
-          - domains: "{{ certbot_domains | default([lookup('file', '/etc/hostname')]) }}"
+          - domains: "{{ mail_domains }}"
         certbot_repo: https://github.com/certbot/certbot.git
         certbot_version: master
         certbot_keep_updated: true
@@ -19,5 +21,20 @@
         # don't assume we have nginx; override default to empty
         certbot_create_standalone_stop_services: []
     - role: debops.roles01.postfix
+      vars:
+        postfix__maincf:
+          - myhostname: "{{ mail_domains[0] }}"
+          - myorigin: '/etc/mailname'
+          - mydestination: "{{ mail_domains }}" + ['localhost']
+          - mynetworks: "{{ mynetworks | default([])}}"
+          - smtpd_tls_cert_file: "/etc/letsencrypt/live/{{ mail_domains[0] }}/cert.pem"
+          - smtpd_tls_key_file: "/etc/letsencrypt/live/{{ mail_domains[0] }}/privkey.pem"
+          - smtpd_tls_CAfile: "/etc/letsencrypt/live/{{ mail_domains[0] }}/chain.pem"
+        postfix__mastercf:
+          - name: 'smtp'
+            type: 'inet'
+            private: False
+            chroot: False
+            command: 'smtpd'
     - role: debops.roles02.postwhite
     - role: debops.roles03.postscreen
