@@ -1,0 +1,10 @@
+---
+- hosts: 127.0.0.1
+  gather_facts: true
+  collections: ['ansible.posix', 'community.general']
+  roles:
+    - role: kyl191.openvpn
+      inventory_hostname: "{{ inventory_hostname }}"
+      openvpn_server_ipv6_network: "{{ openvpn_server_ipv6_network }}"
+      clients:
+        - medusa

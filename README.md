@@ -1,38 +1,15 @@
-# ansible-playbook-core
+# ansible-playbook-core - openvpn branch
 
-Core ansible playbook for setting up a new server. This is basically just for me.
+See https://github.com/devvmh/ansible-playbook-core/tree/master for README with usage and list of branches
 
-I am trying to re-use well-written Ansible playbooks where I can; I've started with the debops project since they have a pretty comprehensive set of modules that work well together and are extensible. More roles from debops are available at https://docs.debops.org/en/master/ansible/roles/index.html.
+You need to set some variables to make this run. Run like so:
 
-I assume you just spun up a VPS and want to *pull* your configuration from the web, rather than the default Ansible assumption of setting up a server from a controller somewhere.
+    ansible-pull --url https://github.com/devvmh/ansible-playbook-core.git --checkout openvpn \
+      --extra-vars "inventory_hostname=$HOSTNAME openvpn_server_ipv6_network=2607:8860::1616:144/120"
 
-### List of playbooks in this repo
+For the openvpn branch, you'll need to install dependencies:
 
-core (basic setup): https://github.com/devvmh/ansible-playbook-core/tree/core
+    ansible-galaxy collection install ansible.posix community.general
+    ansible-galaxy role install kyl191.openvpn
 
-### Usage:
-
-First, log on as root to a new Debian 10 host. Then install two core packages to get started:
-
-    apt install ansible git
-
-Use `ansible --version` to confirm you are on ansible 2.9+. If not, visit https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-debian to install. You'll likely want to run these commands (i.e. use bionic or later, not trusty):
-
-    apt install gnupg2
-    echo 'deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main' >> /etc/apt/sources.list
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
-    apt update
-    apt install ansible
-
-Now you can pull the playbooks from debops + this repository, which should configure pretty much everything:
-
-    ansible-galaxy collection install debops.debops
-    export HOSTNAME=myhostname.mytld.com
-    ansible-pull --url https://github.com/devvmh/ansible-playbook-core.git --checkout core \
-      --extra-vars "netbase__hostname=${HOSTNAME} sshd__permit_root_login=yes sshd__password_authentication=yes"
-
-Now set the password and you're done:
-
-    passwd devin
-
-Once you have run this and tested ssh access, you can omit the extra vars; hostname doesn't need to be changed again, and you can drop ssh access to only passwordless access to a non-privileged account.
+Link to the major dependency role: https://github.com/kyl191/ansible-role-openvpn
