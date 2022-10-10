@@ -5,7 +5,6 @@
     - role: debops.debops.apt_install
       vars:
         apt_install__packages:
-          - python-netaddr # for netbase
           - libuser # for users
     - role: debops.debops.netbase
     - role: debops.debops.sudo
