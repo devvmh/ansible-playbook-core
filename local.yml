@@ -1,0 +1,43 @@
+---
+- hosts: 127.0.0.1
+  become: true
+  collections: [ "ansible.posix" ]
+  vars:
+    user_account_config: &user_account_config
+        state: present
+        shell: "/bin/bash"
+        generate_ssh_key: true
+        groups:
+          - wheel
+          - sudo
+        password: ''
+        update_password: on_create
+        password_lock: false
+    devin_account_config:
+      <<: *user_account_config
+      user: devin
+    randall_account_config:
+      <<: *user_account_config
+      user: randall
+    silverwizard_account_config:
+      <<: *user_account_config
+      user: silverwizard
+  tasks:
+    - name: enable devin user
+      ansible.builtin.user: "{{ devin_account_config }}"
+    - name: enable randall user
+      ansible.builtin.user: "{{ randall_account_config }}"
+    - name: enable silverwizard user
+      ansible.builtin.user: "{{ silverwizard_account_config }}"
+    - name: add devin's ssh keys
+      ansible.posix.authorized_key:
+        user: devin
+        key: "https://github.com/devvmh.keys"
+    - name: add randall's ssh keys
+      ansible.posix.authorized_key:
+        user: randall
+        key: "{{ lookup('file', './randall.pub') }}"
+    - name: add silverwizard's ssh keys
+      ansible.posix.authorized_key:
+        user: silverwizard
+        key: "{{ lookup('file', './silverwizard.pub') }}"
