@@ -8,3 +8,12 @@
       openvpn_server_ipv6_network: "{{ openvpn_server_ipv6_network }}"
       clients:
         - medusa
+        - devin-laptop
+        - devin-phone
+        - alana-laptop
+        - alana-phone
+        - client1
+        - client2
+        - client3
+        - client4
+        - client5
