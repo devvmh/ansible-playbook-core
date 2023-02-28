@@ -14,7 +14,7 @@
         users__accounts:
           - name: 'devin'
             groups: ['admins']
-        users__default_shell: 'bash'
+        users__default_shell: '/bin/bash'
     - role: debops.debops.sshd
       vars:
         sshd__ports: ['218']
