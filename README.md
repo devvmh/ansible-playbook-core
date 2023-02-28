@@ -33,3 +33,7 @@ Now pull the other playbooks as desired:
     ansible-pull --url https://github.com/devvmh/ansible-playbook-core.git --checkout mail-server
 
 Once you have run this and tested ssh access, you can omit the extra vars; hostname doesn't need to be changed again, and you can drop ssh access to only passwordless access to a non-privileged account.
+
+### Notes for Ubuntu
+
+I tried with Ubuntu 20.04 LTS and this worked. Only wrinkle is I needed to specify `sudo ufw allow 218` for ssh to work.
